@@ -140,18 +140,18 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
 
     const handleDispatch = useCallback(() => {
         // 이동할 배차 페이지로 네비게이션
-        const url = `/mypage/reservations/order/dispatch?orderId=${encodeURIComponent(orderId)}`;
+        const url = `/order/dispatch?orderId=${encodeURIComponent(orderId)}`;
         router.push(url);
     }, [orderId, router]);
 
     const handleHome = useCallback(() => {
         // 오더 전용 홈페이지로 이동
-        const url = `/mypage/reservations/order${orderId ? `?orderId=${encodeURIComponent(orderId)}` : ''}`;
+        const url = `/order${orderId ? `?orderId=${encodeURIComponent(orderId)}` : ''}`;
         router.push(url);
     }, [orderId, router]);
 
     const handleSettings = useCallback(() => {
-        const url = `/mypage/reservations/order/settings?orderId=${encodeURIComponent(orderId)}`;
+        const url = `/order/settings?orderId=${encodeURIComponent(orderId)}`;
         router.push(url);
     }, [orderId, router]);
 

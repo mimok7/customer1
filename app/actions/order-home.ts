@@ -30,12 +30,12 @@ export interface OrderData {
 }
 
 export async function getOrderData(orderId: string): Promise<OrderData | null> {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     try {
         const { data: userData, error: userError } = await supabase
             .from('sh_m')
-            .select('order_id,korean_name,english_name,nickname,member_grade,phone,email,kakao_id,payment_method,request_note,special_note,memo,created_at,updated_at')
+            .select('order_id,korean_name,english_name,nickname,member_grade,phone,email,kakao_id,payment_method,request_note,special_note,memo,created_at')
             .eq('order_id', orderId)
             .single();
 
