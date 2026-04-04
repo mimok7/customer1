@@ -1,0 +1,45 @@
+{
+    "name": "스테이하롱 크루즈 예약",
+    "short_name": "스테이하롱",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "icons": [
+        {
+            "src": "/logo-40.png",
+            "sizes": "40x40",
+            "type": "image/png"
+        },
+        {
+            "src": "/logo-160.png",
+            "sizes": "160x160",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        }
+    ]
+}
+{
+    "name": "스테이하롱 크루즈",
+    "short_name": "스테이하롱",
+    "icons": [
+        {
+            "src": "/favicon.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/logo-160.png",
+            "sizes": "160x160",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff"
+}
