@@ -639,6 +639,11 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
             <div className="space-y-4">
                 {airport.map((item: any, idx: number) => (
                     <div key={idx} className="p-4 rounded-xl bg-gray-50 border border-gray-100 cursor-pointer hover:bg-gray-100 transition-colors" onClick={handleDispatch}>
+                        {(() => {
+                            const boardingLocation = item.boarding_location || item.pickup_location || (item.category === '샌딩' ? item.location_name : '');
+                            const dropoffLocation = item.dropoff_location || (item.category === '픽업' ? item.location_name : '');
+
+                            return (
                         <div className="space-y-2 text-sm">
                             <div className="flex items-center gap-2">
                                 <span className="text-gray-500">이동 타입:</span>
@@ -666,6 +671,18 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                 <div className="flex items-center gap-2">
                                     <span className="text-gray-500">경로:</span>
                                     <span className="font-medium text-gray-900">{item.route}</span>
+                                </div>
+                            )}
+                            {boardingLocation && (
+                                <div className="flex items-center gap-2">
+                                    <span className="text-gray-500">승차 위치:</span>
+                                    <span className="font-medium text-gray-900">{boardingLocation}</span>
+                                </div>
+                            )}
+                            {dropoffLocation && (
+                                <div className="flex items-center gap-2">
+                                    <span className="text-gray-500">하차 위치:</span>
+                                    <span className="font-medium text-gray-900">{dropoffLocation}</span>
                                 </div>
                             )}
                             {item.flight_number && (
@@ -707,6 +724,8 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                 </div>
                             )}
                         </div>
+                            );
+                        })()}
                     </div>
                 ))}
             </div>
@@ -1157,6 +1176,8 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                         <div className="space-y-3">
                                             {airportDetails.map((airportItem: any, airportIdx: number) => {
                                                 const airportWayType = normalizeWayType(airportItem.way_type);
+                                                const boardingLocation = airportItem.ra_boarding_location || airportItem.boarding_location || airportItem.pickup_location || '';
+                                                const dropoffLocation = airportItem.ra_dropoff_location || airportItem.dropoff_location || '';
                                                 return (
                                                     <div key={airportIdx} className="rounded-lg border border-gray-200 bg-white p-3 space-y-1.5">
                                                         <div className="flex items-center gap-2">
@@ -1164,6 +1185,20 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                                             <span className="text-gray-500">구분:</span>
                                                             <span className="font-medium text-gray-900">{airportWayType}</span>
                                                         </div>
+                                                        {boardingLocation && (
+                                                            <div className="flex items-center gap-2">
+                                                                <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                                                <span className="text-gray-500">승차 위치:</span>
+                                                                <span className="font-medium text-gray-900">{boardingLocation}</span>
+                                                            </div>
+                                                        )}
+                                                        {dropoffLocation && (
+                                                            <div className="flex items-center gap-2">
+                                                                <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                                                <span className="text-gray-500">하차 위치:</span>
+                                                                <span className="font-medium text-gray-900">{dropoffLocation}</span>
+                                                            </div>
+                                                        )}
                                                         {airportItem.ra_datetime && (
                                                             <div className="flex items-center gap-2">
                                                                 <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
