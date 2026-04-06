@@ -184,7 +184,7 @@ export default function OrderMenuPage() {
                         icon={PlusCircle}
                         title="새 예약 추가"
                         description="크루즈, 호텔, 공항, 투어 등 새로운 예약을 추가하세요"
-                        href="/order"
+                        href={orderId ? `/order/new?orderId=${encodeURIComponent(orderId)}` : '/order/new'}
                         color="border-orange-200 hover:bg-orange-50"
                     />
 
