@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Calendar, CheckCircle2, ClipboardPenLine } from 'lucide-react';
 import supabase from '@/lib/supabase';
@@ -16,7 +16,7 @@ const SERVICE_OPTIONS: Array<{ value: ServiceType; label: string; description: s
     { value: 'rentcar', label: '렌트카', description: '렌트카 이용 예약 요청' },
 ];
 
-export default function OrderNewReservationPage() {
+function OrderNewReservationContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const queryOrderId = searchParams.get('orderId');
@@ -363,5 +363,17 @@ export default function OrderNewReservationPage() {
                 </form>
             </main>
         </div>
+    );
+}
+
+export default function OrderNewReservationPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+            </div>
+        }>
+            <OrderNewReservationContent />
+        </Suspense>
     );
 }
