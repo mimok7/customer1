@@ -1417,7 +1417,7 @@ function DirectBookingContent() {
                         {/* 현재 진행 중인 예약 정보 */}
                         {activeQuoteData && (
                             <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col gap-3">
                                     <div className="flex items-center">
                                         <span className="text-blue-600 text-xl mr-2">📋</span>
                                         <div>
@@ -1438,9 +1438,12 @@ function DirectBookingContent() {
                                                     ? '승인된 예약입니다. 서비스를 추가할 수 있습니다.'
                                                     : '이 예약에 서비스를 추가하거나 수정할 수 있습니다.'}
                                             </p>
+                                            <p className="text-blue-600 text-xs mt-1">
+                                                각 서비스의 예약을 신청 하신후 전체 예약 신청 클릭 하셔야 예약이 신청됩니다.
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-wrap gap-2">
                                         {quotesList.length > 1 && (
                                             <button
                                                 onClick={() => setShowQuoteSelector(true)}
