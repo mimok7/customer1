@@ -1070,17 +1070,17 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                     {/* 크루즈 상세 */}
                                     {item.re_type === 'cruise' && detail && (
                                         <>
-                                            {detail.cruise_rate_card?.cruise_name && (
+                                            {detail.cruise_name && (
                                                 <div className="flex items-center gap-2">
                                                     <Ship className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                                     <span className="text-gray-500">크루즈명:</span>
-                                                    <span className="font-medium text-gray-900">{detail.cruise_rate_card.cruise_name}</span>
+                                                    <span className="font-medium text-gray-900">{detail.cruise_name}</span>
                                                 </div>
                                             )}
-                                            {detail.cruise_rate_card?.room_type && (
+                                            {detail.room_type && (
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-gray-500">객실명:</span>
-                                                    <span className="font-medium text-gray-900">{detail.cruise_rate_card.room_type}</span>
+                                                    <span className="font-medium text-gray-900">{detail.room_type}</span>
                                                 </div>
                                             )}
                                             {detail.checkin && (

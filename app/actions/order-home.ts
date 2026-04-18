@@ -88,11 +88,30 @@ export async function getOrderData(orderId: string): Promise<OrderData | null> {
                         { data: rTour },
                         { data: rAirport }
                     ] = await Promise.all([
-                        supabase.from('reservation_cruise').select('*, cruise_rate_card(cruise_name, room_type)').in('reservation_id', reIds),
+                        supabase.from('reservation_cruise').select('*').in('reservation_id', reIds),
                         supabase.from('reservation_hotel').select('*, hotel_price(hotel_name, room_type, room_name)').in('reservation_id', reIds),
                         supabase.from('reservation_tour').select('*').in('reservation_id', reIds),
                         supabase.from('reservation_airport').select('*').in('reservation_id', reIds),
                     ]);
+
+                    // Cruise 추가 데이터 조회
+                    const cruisePriceCodeIds = Array.from(new Set((rCruise || [])
+                        .map((item: any) => item.room_price_code)
+                        .filter(Boolean)));
+
+                    const cruiseRateCardByCode = new Map<string, any>();
+                    if (cruisePriceCodeIds.length > 0) {
+                        const { data: cruiseRateCards } = await supabase
+                            .from('cruise_rate_card')
+                            .select('id, cruise_name, room_type')
+                            .in('id', cruisePriceCodeIds);
+
+                        (cruiseRateCards || []).forEach((card: any) => {
+                            if (card.id) {
+                                cruiseRateCardByCode.set(String(card.id), card);
+                            }
+                        });
+                    }
 
                     const tourPricingIds = Array.from(new Set((rTour || [])
                         .map((item: any) => item.tour_price_code)
@@ -134,7 +153,17 @@ export async function getOrderData(orderId: string): Promise<OrderData | null> {
                     for (const res of reservations) {
                         let detail: any = null;
                         if (res.re_type === 'cruise') {
-                            detail = (rCruise || []).find((d: any) => d.reservation_id === res.re_id) || null;
+                            const cruiseDetail = (rCruise || []).find((d: any) => d.reservation_id === res.re_id) || null;
+                            if (cruiseDetail) {
+                                const cruiseCard = cruiseRateCardByCode.get(String(cruiseDetail.room_price_code));
+                                detail = {
+                                    ...cruiseDetail,
+                                    cruise_name: cruiseCard?.cruise_name,
+                                    room_type: cruiseCard?.room_type
+                                };
+                            } else {
+                                detail = null;
+                            }
                         } else if (res.re_type === 'hotel') {
                             detail = (rHotel || []).find((d: any) => d.reservation_id === res.re_id) || null;
                         } else if (res.re_type === 'tour') {
