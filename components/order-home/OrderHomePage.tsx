@@ -1070,11 +1070,17 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                     {/* 크루즈 상세 */}
                                     {item.re_type === 'cruise' && detail && (
                                         <>
-                                            {detail.room_price_code && (
+                                            {detail.cruise_rate_card?.cruise_name && (
                                                 <div className="flex items-center gap-2">
                                                     <Ship className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                                                    <span className="text-gray-500">객실코드:</span>
-                                                    <span className="font-medium text-gray-900">{detail.room_price_code}</span>
+                                                    <span className="text-gray-500">크루즈명:</span>
+                                                    <span className="font-medium text-gray-900">{detail.cruise_rate_card.cruise_name}</span>
+                                                </div>
+                                            )}
+                                            {detail.cruise_rate_card?.room_type && (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-gray-500">객실명:</span>
+                                                    <span className="font-medium text-gray-900">{detail.cruise_rate_card.room_type}</span>
                                                 </div>
                                             )}
                                             {detail.checkin && (
@@ -1090,12 +1096,19 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                                     <span className="font-medium text-gray-900">{detail.room_count}객실</span>
                                                 </div>
                                             )}
-                                            {detail.request_note && (
+                                            {(detail.adult_count !== undefined || detail.child_count !== undefined || detail.infant_count !== undefined || detail.child_extra_bed_count !== undefined || detail.extra_bed_count !== undefined || detail.single_count !== undefined) && (
                                                 <div className="flex items-start gap-2 pt-1">
-                                                    <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                                                    <div>
-                                                        <span className="text-gray-500 text-xs">요청사항:</span>
-                                                        <div className="bg-blue-50 p-2 rounded-lg text-gray-700 text-xs mt-0.5 whitespace-pre-wrap">{detail.request_note}</div>
+                                                    <Users className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <span className="text-gray-500 text-xs block">게스트:</span>
+                                                        <div className="grid grid-cols-2 gap-1 mt-1 text-xs text-gray-700">
+                                                            {detail.adult_count !== undefined && detail.adult_count > 0 && <span>성인: {detail.adult_count}</span>}
+                                                            {detail.child_count !== undefined && detail.child_count > 0 && <span>아동: {detail.child_count}</span>}
+                                                            {detail.infant_count !== undefined && detail.infant_count > 0 && <span>유아: {detail.infant_count}</span>}
+                                                            {detail.child_extra_bed_count !== undefined && detail.child_extra_bed_count > 0 && <span>아동 엑베: {detail.child_extra_bed_count}</span>}
+                                                            {detail.extra_bed_count !== undefined && detail.extra_bed_count > 0 && <span>성인 엑베: {detail.extra_bed_count}</span>}
+                                                            {detail.single_count !== undefined && detail.single_count > 0 && <span>싱글: {detail.single_count}</span>}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )}

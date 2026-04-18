@@ -88,7 +88,7 @@ export async function getOrderData(orderId: string): Promise<OrderData | null> {
                         { data: rTour },
                         { data: rAirport }
                     ] = await Promise.all([
-                        supabase.from('reservation_cruise').select('*').in('reservation_id', reIds),
+                        supabase.from('reservation_cruise').select('*, cruise_rate_card(cruise_name, room_type)').in('reservation_id', reIds),
                         supabase.from('reservation_hotel').select('*, hotel_price(hotel_name, room_type, room_name)').in('reservation_id', reIds),
                         supabase.from('reservation_tour').select('*').in('reservation_id', reIds),
                         supabase.from('reservation_airport').select('*').in('reservation_id', reIds),
