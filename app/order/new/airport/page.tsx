@@ -217,9 +217,9 @@ function DirectBookingAirportContent() {
             setForm(prev => ({
                 ...prev,
                 serviceType: isBoth ? 'both' : (isPickup ? 'pickup' : 'sending'),
-                airportName: first.ra_airport_name || '',
-                pickupAirportName: isPickup ? (first.ra_airport_name || '') : '',
-                sendingAirportName: !isPickup ? (first.ra_airport_name || '') : '',
+                airportName: first.ra_airport_location || '',
+                pickupAirportName: isPickup ? (first.ra_airport_location || '') : '',
+                sendingAirportName: !isPickup ? (first.ra_airport_location || '') : '',
                 category1: priceInfo1?.service_type || (isPickup ? '픽업' : '샌딩'),
                 route1: priceInfo1?.route || '',
                 vehicleType1: priceInfo1?.vehicle_type || '',
@@ -244,7 +244,7 @@ function DirectBookingAirportContent() {
 
                 setForm(prev => ({
                     ...prev,
-                    sendingAirportName: second.ra_airport_name || prev.sendingAirportName,
+                    sendingAirportName: second.ra_airport_location || prev.sendingAirportName,
                     category2: priceInfo2?.service_type || '샌딩',
                     route2: priceInfo2?.route || '',
                     vehicleType2: priceInfo2?.vehicle_type || '',
@@ -621,7 +621,6 @@ function DirectBookingAirportContent() {
                     const { data, error } = await supabase.from('reservation_airport').insert({
                         reservation_id: existingReservationId,
                         airport_price_code: code,
-                        ra_airport_name: airportName,
                         ra_airport_location: location,
                         ra_flight_number: flightNum,
                         ra_datetime: datetime ? new Date(datetime).toISOString() : null,
@@ -711,7 +710,6 @@ function DirectBookingAirportContent() {
                 const airportReservation = {
                     reservation_id: newReservation.re_id,
                     airport_price_code: code,
-                    ra_airport_name: airportName,
                     ra_airport_location: location,
                     ra_flight_number: flightNum,
                     ra_datetime: datetime
