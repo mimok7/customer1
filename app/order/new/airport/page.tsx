@@ -388,15 +388,15 @@ function DirectBookingAirportContent() {
         ];
 
         try {
-            const { data, error } = await supabase
-                .from('airport_name')
-                .select('airport_name')
-                .order('airport_id', { ascending: true });
+            const response = await fetch('/api/airport-names', { cache: 'no-store' });
+            if (!response.ok) {
+                throw new Error(`airport-names request failed: ${response.status}`);
+            }
 
-            if (error) throw error;
-
-            const rows = (data as any[]) || [];
-            const names: string[] = [...new Set(rows.map(item => String(item.airport_name || '').trim()))].filter(Boolean);
+            const json = await response.json();
+            const names: string[] = Array.isArray(json?.data)
+                ? json.data.map((v: unknown) => String(v || '').trim()).filter(Boolean)
+                : [];
 
             if (names.length > 0) {
                 setAirportNameOptions(names);
