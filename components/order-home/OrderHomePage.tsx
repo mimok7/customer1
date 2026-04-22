@@ -1205,14 +1205,7 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                                                 <span className="font-medium text-gray-900">{formatDateTime(airportItem.ra_datetime)}</span>
                                                             </div>
                                                         )}
-                                                        {isSending && airportItem.ra_airport_location && (
-                                                            <div className="flex items-center gap-2">
-                                                                <Plane className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                                                                <span className="text-gray-500">공항:</span>
-                                                                <span className="font-medium text-gray-900">{airportItem.ra_airport_location}</span>
-                                                            </div>
-                                                        )}
-                                                        {isPickup && airportItem.ra_airport_location && (
+                                                        {airportItem.ra_airport_location && (
                                                             <div className="flex items-center gap-2">
                                                                 <Plane className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                                                 <span className="text-gray-500">공항:</span>
