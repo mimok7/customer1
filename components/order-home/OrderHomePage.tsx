@@ -1189,8 +1189,6 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                         <div className="space-y-3">
                                             {airportDetails.map((airportItem: any, airportIdx: number) => {
                                                 const airportWayType = normalizeWayType(airportItem.way_type);
-                                                const boardingLocation = airportItem.ra_boarding_location || airportItem.boarding_location || airportItem.pickup_location || '';
-                                                const dropoffLocation = airportItem.ra_dropoff_location || airportItem.dropoff_location || '';
                                                 const isPickup = airportWayType === '픽업';
                                                 const isSending = airportWayType === '샌딩';
                                                 return (
@@ -1234,18 +1232,18 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                                                 <span className="font-medium text-gray-900">{airportItem.ra_passenger_count}명</span>
                                                             </div>
                                                         )}
-                                                        {isPickup && dropoffLocation && (
+                                                        {isPickup && airportItem.accommodation_info && (
                                                             <div className="flex items-center gap-2">
                                                                 <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                                                 <span className="text-gray-500">하차위치:</span>
-                                                                <span className="font-medium text-gray-900">{dropoffLocation}</span>
+                                                                <span className="font-medium text-gray-900">{airportItem.accommodation_info}</span>
                                                             </div>
                                                         )}
-                                                        {isSending && boardingLocation && (
+                                                        {isSending && airportItem.accommodation_info && (
                                                             <div className="flex items-center gap-2">
                                                                 <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                                                 <span className="text-gray-500">승차위치:</span>
-                                                                <span className="font-medium text-gray-900">{boardingLocation}</span>
+                                                                <span className="font-medium text-gray-900">{airportItem.accommodation_info}</span>
                                                             </div>
                                                         )}
                                                     </div>
