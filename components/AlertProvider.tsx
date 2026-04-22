@@ -11,9 +11,11 @@ type AlertProviderProps = {
 // 전역 Alert Provider: window.alert를 사용자 정의 모달로 대체
 export default function AlertProvider({ children, siteName }: AlertProviderProps) {
     const [message, setMessage] = useState<string | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
     const brandName = siteName || process.env.NEXT_PUBLIC_SITE_NAME || "스테이 하롱 트레블";
 
     useEffect(() => {
+        setIsMounted(true);
         const originalAlert = window.alert;
         window.alert = (msg?: unknown) => {
             try {
@@ -81,30 +83,33 @@ export default function AlertProvider({ children, siteName }: AlertProviderProps
         cursor: "pointer",
     };
 
+    if (!isMounted || message === null || !document.body) {
+        return children;
+    }
+
     return (
         <>
             {children}
-            {message !== null && typeof document !== "undefined" &&
-                createPortal(
-                    <div style={overlayStyle} onClick={close} role="presentation">
-                        <div
-                            style={modalStyle}
-                            onClick={(e) => e.stopPropagation()}
-                            role="dialog"
-                            aria-modal="true"
-                            aria-label="알림"
-                        >
-                            <div style={headerStyle}>{brandName}</div>
-                            <div style={bodyStyle}>{message}</div>
-                            <div style={footerStyle}>
-                                <button type="button" style={buttonStyle} onClick={close}>
-                                    확인
-                                </button>
-                            </div>
+            {createPortal(
+                <div style={overlayStyle} onClick={close} role="presentation">
+                    <div
+                        style={modalStyle}
+                        onClick={(e) => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="알림"
+                    >
+                        <div style={headerStyle}>{brandName}</div>
+                        <div style={bodyStyle}>{message}</div>
+                        <div style={footerStyle}>
+                            <button type="button" style={buttonStyle} onClick={close}>
+                                확인
+                            </button>
                         </div>
-                    </div>,
-                    document.body
-                )}
+                    </div>
+                </div>,
+                document.body
+            )}
         </>
     );
 }
