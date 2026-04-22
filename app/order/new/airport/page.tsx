@@ -203,6 +203,7 @@ function DirectBookingAirportContent() {
             const first = airportRows[0];
             const hasTwo = airportRows.length >= 2;
             const second = hasTwo ? airportRows[1] : null;
+            const fallbackAirportName = airportRows.find((row) => String(row.ra_airport_location || '').includes('공항'))?.ra_airport_location || '';
 
             // airport_price 정보 조회
             const { data: priceInfo1 } = await supabase
@@ -217,17 +218,21 @@ function DirectBookingAirportContent() {
             setForm(prev => ({
                 ...prev,
                 serviceType: isBoth ? 'both' : (isPickup ? 'pickup' : 'sending'),
-                airportName: first.ra_airport_location || '',
-                pickupAirportName: isPickup ? (first.ra_airport_location || '') : '',
-                sendingAirportName: !isPickup ? (first.ra_airport_location || '') : '',
+                airportName: (first.ra_airport_location && String(first.ra_airport_location).includes('공항')) ? first.ra_airport_location : fallbackAirportName,
+                pickupAirportName: isPickup
+                    ? (((first.ra_airport_location && String(first.ra_airport_location).includes('공항')) ? first.ra_airport_location : fallbackAirportName) || '')
+                    : '',
+                sendingAirportName: !isPickup
+                    ? (((first.ra_airport_location && String(first.ra_airport_location).includes('공항')) ? first.ra_airport_location : fallbackAirportName) || '')
+                    : '',
                 category1: priceInfo1?.service_type || (isPickup ? '픽업' : '샌딩'),
                 route1: priceInfo1?.route || '',
                 vehicleType1: priceInfo1?.vehicle_type || '',
                 airportCode1: first.airport_price_code || '',
-                pickupLocation: isPickup ? (first.ra_airport_location || '') : '',
+                pickupLocation: isPickup ? (first.accommodation_info || '') : '',
                 pickupDatetime: isPickup && first.ra_datetime ? new Date(first.ra_datetime).toISOString().slice(0, 16) : '',
                 pickupFlightNumber: isPickup ? (first.ra_flight_number || '') : '',
-                sendingLocation: isPickup ? '' : (first.ra_airport_location || ''),
+                sendingLocation: isPickup ? '' : (first.accommodation_info || ''),
                 sendingDatetime: !isPickup && first.ra_datetime ? new Date(first.ra_datetime).toISOString().slice(0, 16) : '',
                 passengerCount: first.ra_passenger_count || 1,
                 luggageCount: first.ra_luggage_count || 0,
@@ -244,12 +249,14 @@ function DirectBookingAirportContent() {
 
                 setForm(prev => ({
                     ...prev,
-                    sendingAirportName: second.ra_airport_location || prev.sendingAirportName,
+                    sendingAirportName: (second.ra_airport_location && String(second.ra_airport_location).includes('공항'))
+                        ? second.ra_airport_location
+                        : (fallbackAirportName || prev.sendingAirportName),
                     category2: priceInfo2?.service_type || '샌딩',
                     route2: priceInfo2?.route || '',
                     vehicleType2: priceInfo2?.vehicle_type || '',
                     airportCode2: second.airport_price_code || '',
-                    sendingLocation: second.ra_airport_location || '',
+                    sendingLocation: second.accommodation_info || '',
                     sendingDatetime: second.ra_datetime ? new Date(second.ra_datetime).toISOString().slice(0, 16) : '',
                 }));
                 if (priceInfo2?.price) setPrice2(priceInfo2.price);
@@ -621,7 +628,8 @@ function DirectBookingAirportContent() {
                     const { data, error } = await supabase.from('reservation_airport').insert({
                         reservation_id: existingReservationId,
                         airport_price_code: code,
-                        ra_airport_location: location,
+                        ra_airport_location: airportName,
+                        accommodation_info: location,
                         ra_flight_number: flightNum,
                         ra_datetime: datetime ? new Date(datetime).toISOString() : null,
                         ra_passenger_count: form.passengerCount,
@@ -710,7 +718,8 @@ function DirectBookingAirportContent() {
                 const airportReservation = {
                     reservation_id: newReservation.re_id,
                     airport_price_code: code,
-                    ra_airport_location: location,
+                    ra_airport_location: airportName,
+                    accommodation_info: location,
                     ra_flight_number: flightNum,
                     ra_datetime: datetime
                         ? new Date(datetime).toISOString()
