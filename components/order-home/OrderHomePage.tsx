@@ -1051,12 +1051,6 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                             if (normalized === 'pickup' || normalized === 'pick_up') return '픽업';
                             return wayType || '픽업';
                         };
-                        const fallbackAirportName = airportDetails.find((airportItem: any) =>
-                            String(airportItem?.ra_airport_location || '').includes('공항')
-                        )?.ra_airport_location || '';
-                        const fallbackAccommodationInfo = airportDetails.find((airportItem: any) =>
-                            Boolean(String(airportItem?.accommodation_info || '').trim())
-                        )?.accommodation_info || '';
                         return (
                             <div key={idx} className="p-4 rounded-xl bg-gray-50 border border-gray-100">
                                 <div className="flex items-center mb-3">
@@ -1197,10 +1191,6 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                                 const airportWayType = normalizeWayType(airportItem.way_type);
                                                 const isPickup = airportWayType === '픽업';
                                                 const isSending = airportWayType === '샌딩';
-                                                const displayAirportName = String(airportItem.ra_airport_location || '').includes('공항')
-                                                    ? airportItem.ra_airport_location
-                                                    : fallbackAirportName;
-                                                const displayAccommodationInfo = String(airportItem.accommodation_info || '').trim() || fallbackAccommodationInfo;
                                                 return (
                                                     <div key={airportIdx} className="rounded-lg border border-gray-200 bg-white p-3 space-y-1.5">
                                                         <div className="flex items-center gap-2">
@@ -1215,11 +1205,11 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                                                 <span className="font-medium text-gray-900">{formatDateTime(airportItem.ra_datetime)}</span>
                                                             </div>
                                                         )}
-                                                        {displayAirportName && (
+                                                        {airportItem.ra_airport_location && (
                                                             <div className="flex items-center gap-2">
                                                                 <Plane className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                                                 <span className="text-gray-500">공항:</span>
-                                                                <span className="font-medium text-gray-900">{displayAirportName}</span>
+                                                                <span className="font-medium text-gray-900">{airportItem.ra_airport_location}</span>
                                                             </div>
                                                         )}
                                                         {airportItem.ra_flight_number && (
@@ -1235,18 +1225,18 @@ export default function OrderHomePage({ orderId }: OrderHomePageProps) {
                                                                 <span className="font-medium text-gray-900">{airportItem.ra_passenger_count}명</span>
                                                             </div>
                                                         )}
-                                                        {isPickup && displayAccommodationInfo && (
+                                                        {isPickup && airportItem.accommodation_info && (
                                                             <div className="flex items-center gap-2">
                                                                 <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                                                 <span className="text-gray-500">하차위치:</span>
-                                                                <span className="font-medium text-gray-900">{displayAccommodationInfo}</span>
+                                                                <span className="font-medium text-gray-900">{airportItem.accommodation_info}</span>
                                                             </div>
                                                         )}
-                                                        {isSending && displayAccommodationInfo && (
+                                                        {isSending && airportItem.accommodation_info && (
                                                             <div className="flex items-center gap-2">
                                                                 <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                                                 <span className="text-gray-500">승차위치:</span>
-                                                                <span className="font-medium text-gray-900">{displayAccommodationInfo}</span>
+                                                                <span className="font-medium text-gray-900">{airportItem.accommodation_info}</span>
                                                             </div>
                                                         )}
                                                     </div>

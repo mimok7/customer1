@@ -203,7 +203,6 @@ function DirectBookingAirportContent() {
             const first = airportRows[0];
             const hasTwo = airportRows.length >= 2;
             const second = hasTwo ? airportRows[1] : null;
-            const fallbackAirportName = airportRows.find((row) => String(row.ra_airport_location || '').includes('공항'))?.ra_airport_location || '';
 
             // airport_price 정보 조회
             const { data: priceInfo1 } = await supabase
@@ -218,13 +217,9 @@ function DirectBookingAirportContent() {
             setForm(prev => ({
                 ...prev,
                 serviceType: isBoth ? 'both' : (isPickup ? 'pickup' : 'sending'),
-                airportName: (first.ra_airport_location && String(first.ra_airport_location).includes('공항')) ? first.ra_airport_location : fallbackAirportName,
-                pickupAirportName: isPickup
-                    ? (((first.ra_airport_location && String(first.ra_airport_location).includes('공항')) ? first.ra_airport_location : fallbackAirportName) || '')
-                    : '',
-                sendingAirportName: !isPickup
-                    ? (((first.ra_airport_location && String(first.ra_airport_location).includes('공항')) ? first.ra_airport_location : fallbackAirportName) || '')
-                    : '',
+                airportName: first.ra_airport_location || '',
+                pickupAirportName: isPickup ? (first.ra_airport_location || '') : '',
+                sendingAirportName: !isPickup ? (first.ra_airport_location || '') : '',
                 category1: priceInfo1?.service_type || (isPickup ? '픽업' : '샌딩'),
                 route1: priceInfo1?.route || '',
                 vehicleType1: priceInfo1?.vehicle_type || '',
@@ -249,9 +244,7 @@ function DirectBookingAirportContent() {
 
                 setForm(prev => ({
                     ...prev,
-                    sendingAirportName: (second.ra_airport_location && String(second.ra_airport_location).includes('공항'))
-                        ? second.ra_airport_location
-                        : (fallbackAirportName || prev.sendingAirportName),
+                    sendingAirportName: second.ra_airport_location || prev.sendingAirportName,
                     category2: priceInfo2?.service_type || '샌딩',
                     route2: priceInfo2?.route || '',
                     vehicleType2: priceInfo2?.vehicle_type || '',
